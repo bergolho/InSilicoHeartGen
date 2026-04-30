@@ -34,7 +34,7 @@ function [interp, interp2, interp3]= calculate_ray_intersections(points_full,fac
             %USING FACES
                 % pointnormal=vertexNormal(TR);
                 % pointnormal=gpuArray(pointnormal);
-                
+         parallel.gpu.enableCUDAForwardCompatibility(true);
 
          disp('performing ray tracing algorithm...');
 

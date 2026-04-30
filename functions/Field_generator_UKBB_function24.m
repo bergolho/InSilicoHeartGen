@@ -947,7 +947,7 @@ cd (directoryResults)
         %%aha
      [ FieldsF.aha]= aha_segments_v3(v,f, FieldsF.Ventricle, FieldsF.r,pto,car+1,Fid);
 
-     mkdir(fullfile(['ensi_Fine_',num2str(case_number)]))
+    mkdir(fullfile(['ensi_Fine_',num2str(case_number)]))
     directoryFine=fullfile(directoryResults,['ensi_Fine_',num2str(case_number)]);
     cd (directoryFine)
     save_ensi_UKBB(v,f, FieldsF.Ventricle, Fields.d3,FieldsF.Tphi3,FieldsF.tm_cobi,Fields.Epiendo,Fields.Epiendo3,FieldsF.a2b_uvc,FieldsF.a2b_cobi,FieldsF.r,FieldsF.lvrv_cobi,FieldsF.r2l_geo,FieldsF.a2b,FieldsF.r2l,FieldsF.a2p,Fields.F,Fields.F_S,Fields.F_N,FieldsF.apex_2_base,FieldsF.aha,Fields.Plug_tetra);
@@ -955,7 +955,8 @@ cd (directoryResults)
     Epiendo=Fields.Epiendo; Epiendo3=Fields.Epiendo3; Ventricle=FieldsF.Ventricle; Plug_tetra=Fields.Plug_tetra;apex_2_base=FieldsF.apex_2_base; label_set2=FieldsF.label_set2;
     r=FieldsF.r; aha=FieldsF.aha;tm_cobi=FieldsF.tm_cobi;a2b_uvc=FieldsF.a2b_uvc;r2l_geo=FieldsF.r2l_geo;lvrv_cobi=FieldsF.lvrv_cobi;a2b_cobi=FieldsF.a2b_cobi;a2b=FieldsF.a2b;a2p=FieldsF.a2p;r2l=FieldsF.r2l; a2b_cut=FieldsF.a2b_cut;lvrv=FieldsF.lvrv;label_fine=FieldsF.label_fine;
     save('Case_Fine','v','f','Tphi3','d3','Plug_points','Tphi','Tphi_bi','Epiendo','Epiendo3','Ventricle','F','F_N','F_S','Plug_tetra','label','label_set','label_set2','apex_2_base','lvrv','NN_surf','r','tm_cobi','a2b_uvc','a2b_cobi','lvrv_cobi','r2l_geo','a2b','a2p','r2l','a2b_cut','aha','a2b_vector','r2l_vector','a2p_vector','label_fine');
-    CSVFilesgeneration_f_UKBB([num2str(case_number),'_',name(1:end-4)],'Case_Fine.mat');
+    %CSVFilesgeneration_f_UKBB([num2str(case_number),'_',name(1:end-4)],'Case_Fine.mat');
+    CSVFilesgeneration_f_UKBB([case_number,'_',name(1:end-4)],'Case_Fine.mat');
 
      cd ..
      %
@@ -1007,7 +1008,8 @@ cd (directoryResults)
     r=FieldsC.r;tm_cobi=FieldsC.tm_cobi;a2b_uvc=FieldsC.a2b_uvc;r2l_geo=FieldsC.r2l_geo;lvrv_cobi=FieldsC.lvrv_cobi;a2b_cobi=FieldsC.a2b_cobi;a2b=FieldsC.a2b;a2p=FieldsC.a2p;r2l=FieldsC.r2l;a2b_cut=FieldsC.a2b_cut;
 
      save('Case_coarse','v','f','Tphi3','d3','Plug_points','Tphi','Tphi_bi','Epiendo','Epiendo3','Ventricle','F','F_N','F_S','Plug_tetra','label','label_set','label_set2','apex_2_base','lvrv','NN_surf','r','tm_cobi','a2b_uvc','a2b_cobi','lvrv_cobi','r2l_geo','a2b','a2p','r2l','a2b_cut','aha','a2b_vector','r2l_vector','a2p_vector','label_fine');
-     CSVFilesgeneration_f_UKBB(strcat(num2str(case_number),'_coarse'),'Case_coarse.mat');
+     %CSVFilesgeneration_f_UKBB(strcat(num2str(case_number),'_coarse'),'Case_coarse.mat');
+     CSVFilesgeneration_f_UKBB(strcat(case_number,'_coarse'),'Case_coarse.mat');
 
  else  
 disp('Saving data');
