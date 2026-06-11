@@ -15,7 +15,7 @@
 %     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-function Field_generator_UKBB_function24(Fiber_info,meshformat,pericardiumlevel, epiendo, epiendoRV,requiresInterpolation, case_number)
+function Field_generator_UKBB_function24(Fiber_info,meshformat,pericardiumlevel, epiendo, epiendoRV,requiresInterpolation, case_number, fibrosis_filename)
 %add original projected cobiveco coodinates
 directory=pwd;
 
@@ -40,7 +40,20 @@ directoryResults=pwd;
      node=double(MeshCoarse.points);
      elem=double(MeshCoarse.cells);
      face=volface(elem);
-   
+    
+     %% Fibrosis handling
+     surf_fibrosis=vtkRead(fullfile(fibrosis_filename));
+     [np_fibrosis, dummy] = size(surf_fibrosis.points);
+     [np_mesh, dummy] = size(MeshCoarse.points);
+     mesh_fibrosis_mask = zeros(np_mesh(1),1);
+     for i=1:np_fibrosis
+        k = dsearchn(MeshCoarse.points,surf_fibrosis.points(i,1:3));
+        mesh_fibrosis_mask(k) = 1;
+     end
+     %directoryResults = pwd;
+     %fibrosis_filename = strcat(directoryResults,'C:\Users\arant\Documents\MEGA\Postdoc\CNPq\Conhecimento_Brasil_2024\Programas\InSilicoHeartGen-main\outputs\Patient_7_refine_surface_mesh\ensipac7\CSVFiles\pac7_refined_fibrosis_mask.csv');
+     %writematrix(mesh_fibrosis_mask,fibrosis_filename);
+
     %labelling volumetric mesh (define boundaries for Heat Equation)
     disp('Labelling and mesh preparation');
 
@@ -951,6 +964,7 @@ cd (directoryResults)
     directoryFine=fullfile(directoryResults,['ensi_Fine_',num2str(case_number)]);
     cd (directoryFine)
     save_ensi_UKBB(v,f, FieldsF.Ventricle, Fields.d3,FieldsF.Tphi3,FieldsF.tm_cobi,Fields.Epiendo,Fields.Epiendo3,FieldsF.a2b_uvc,FieldsF.a2b_cobi,FieldsF.r,FieldsF.lvrv_cobi,FieldsF.r2l_geo,FieldsF.a2b,FieldsF.r2l,FieldsF.a2p,Fields.F,Fields.F_S,Fields.F_N,FieldsF.apex_2_base,FieldsF.aha,Fields.Plug_tetra);
+    %save_ensi_with_fibrosis_UKBB(v,f, FieldsF.Ventricle, Fields.d3,FieldsF.Tphi3,FieldsF.tm_cobi,Fields.Epiendo,Fields.Epiendo3,FieldsF.a2b_uvc,FieldsF.a2b_cobi,FieldsF.r,FieldsF.lvrv_cobi,FieldsF.r2l_geo,FieldsF.a2b,FieldsF.r2l,FieldsF.a2p,Fields.F,Fields.F_S,Fields.F_N,FieldsF.apex_2_base,FieldsF.aha,Fields.Plug_tetra,mesh_fibrosis_mask);
     Tphi3=FieldsF.Tphi3; d3=Fields.Tphi3;Plug_points=Fields.Plug_points;Tphi=FieldsF.Tphi;Tphi_bi=FieldsF.Tphi_bi;F=Fields.F;F_S=Fields.F_S;F_N=Fields.F_N;
     Epiendo=Fields.Epiendo; Epiendo3=Fields.Epiendo3; Ventricle=FieldsF.Ventricle; Plug_tetra=Fields.Plug_tetra;apex_2_base=FieldsF.apex_2_base; label_set2=FieldsF.label_set2;
     r=FieldsF.r; aha=FieldsF.aha;tm_cobi=FieldsF.tm_cobi;a2b_uvc=FieldsF.a2b_uvc;r2l_geo=FieldsF.r2l_geo;lvrv_cobi=FieldsF.lvrv_cobi;a2b_cobi=FieldsF.a2b_cobi;a2b=FieldsF.a2b;a2p=FieldsF.a2p;r2l=FieldsF.r2l; a2b_cut=FieldsF.a2b_cut;lvrv=FieldsF.lvrv;label_fine=FieldsF.label_fine;
@@ -991,8 +1005,9 @@ cd (directoryResults)
         FieldsC.Epiendo3=ones(size(FieldsC.Tphi3)).*2;
         FieldsC.Epiendo3(FieldsC.Tphi3>=(1-epiendoRV(1)./100))=1;
         FieldsC.Epiendo3(FieldsC.Tphi3<(epiendoRV(3)./100))=3;
-      save_ensi_UKBB(v2,f2,FieldsC.Ventricle,FieldsC.d3,FieldsC.Tphi3,FieldsC.tm_cobi,FieldsC.Epiendo,FieldsC.Epiendo3,FieldsC.a2b_uvc,FieldsC.a2b_cobi,FieldsC.r,FieldsC.lvrv_cobi,FieldsC.r2l_geo,FieldsC.a2b,FieldsC.r2l,FieldsC.a2p,F,F_S,F_N,FieldsC.apex_2_base,aha,Plug_tetra);
-      
+      %save_ensi_UKBB(v2,f2,FieldsC.Ventricle,FieldsC.d3,FieldsC.Tphi3,FieldsC.tm_cobi,FieldsC.Epiendo,FieldsC.Epiendo3,FieldsC.a2b_uvc,FieldsC.a2b_cobi,FieldsC.r,FieldsC.lvrv_cobi,FieldsC.r2l_geo,FieldsC.a2b,FieldsC.r2l,FieldsC.a2p,F,F_S,F_N,FieldsC.apex_2_base,aha,Plug_tetra);
+      save_ensi_with_fibrosis_UKBB(v2,f2,FieldsC.Ventricle,FieldsC.d3,FieldsC.Tphi3,FieldsC.tm_cobi,FieldsC.Epiendo,FieldsC.Epiendo3,FieldsC.a2b_uvc,FieldsC.a2b_cobi,FieldsC.r,FieldsC.lvrv_cobi,FieldsC.r2l_geo,FieldsC.a2b,FieldsC.r2l,FieldsC.a2p,F,F_S,F_N,FieldsC.apex_2_base,aha,Plug_tetra,mesh_fibrosis_mask);
+
      save('IDs_rel','NN','NN_c2f');
      %coarsening:
      v=v2;
@@ -1022,7 +1037,8 @@ disp('Saving data');
      mkdir('ensi')
      directoryFine=fullfile(directoryResults,'ensi');
      cd (directoryFine)
-     save_ensi_UKBB(v,f,Fields.Ventricle,Fields.d3,Fields.Tphi3,FieldsC.tm_cobi,Fields.Epiendo,Fields.Epiendo3,FieldsC.a2b_uvc,FieldsC.a2b_cobi,FieldsC.r,FieldsC.lvrv_cobi,FieldsC.r2l_geo,FieldsC.a2b,FieldsC.r2l,FieldsC.a2p,Fields.F,Fields.F_S,Fields.F_N,FieldsC.apex_2_base,Fields.aha,Fields.Plug_tetra);
+     %save_ensi_UKBB(v,f,Fields.Ventricle,Fields.d3,Fields.Tphi3,FieldsC.tm_cobi,Fields.Epiendo,Fields.Epiendo3,FieldsC.a2b_uvc,FieldsC.a2b_cobi,FieldsC.r,FieldsC.lvrv_cobi,FieldsC.r2l_geo,FieldsC.a2b,FieldsC.r2l,FieldsC.a2p,Fields.F,Fields.F_S,Fields.F_N,FieldsC.apex_2_base,Fields.aha,Fields.Plug_tetra);
+     save_ensi_with_fibrosis_UKBB(v,f,Fields.Ventricle,Fields.d3,Fields.Tphi3,FieldsC.tm_cobi,Fields.Epiendo,Fields.Epiendo3,FieldsC.a2b_uvc,FieldsC.a2b_cobi,FieldsC.r,FieldsC.lvrv_cobi,FieldsC.r2l_geo,FieldsC.a2b,FieldsC.r2l,FieldsC.a2p,Fields.F,Fields.F_S,Fields.F_N,FieldsC.apex_2_base,Fields.aha,Fields.Plug_tetra,mesh_fibrosis_mask);
 
 %% save data
 

@@ -203,6 +203,11 @@ rcos=cos(2*pi*Data.r);
         F_N=gradientinterpol(Data.F_N,length(cube_centroid),points_Tetra,bar);
         F_S=gradientinterpol(Data.F_S,length(cube_centroid),points_Tetra,bar);
 
+        % Normalize the fiber orientation vectors
+        F = F ./ vecnorm(F,2,2);
+        F_S = F_S ./ vecnorm(F_S,2,2);
+        F_N = F_N ./ vecnorm(F_N,2,2);
+
         ahapointsTetra=Data.aha(points_Tetra);
         aha=dot(bar,ahapointsTetra,2);
 
@@ -235,7 +240,8 @@ rcos=cos(2*pi*Data.r);
      save_ensi_MonoAlg_hex_v2(node_vox,elem,Ventricle,d3,Tphi3,tm_cobi,Epiendo,Epiendo3,a2b_uvc,a2b_cobi,r,lvrv_cobi,r2l_geo,a2b,r2l,a2p,F,F_S,F_N,Material,aha,Ik_s,FastEndo);
 
 
-     T=array2table([ALG*10,Tphi3,Epiendo3,a2b,FastEndo,Healthytissue,F,F_S,F_N,Ik_s]);
+     %T=array2table([ALG*10,Tphi3,Epiendo3,a2b,FastEndo,Healthytissue,F,F_S,F_N,Ik_s]);
+     T=array2table([ALG*10,Tphi3,Epiendo3,a2b,FastEndo,Healthytissue,F,F_N,F_S,Ik_s]);
 
      writetable(T,strcat(case_name,'.txt'),'WriteVariableNames',0);
 

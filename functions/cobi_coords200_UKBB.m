@@ -204,8 +204,10 @@ tmLaplace = solveLaplace(L, ids, val, 1e-8, 5000);
 
 T = normalizedGradField(GT, tmLaplace,1e-9, false, v, elem);
 
-tmDistEpi = solveTrajectDist(GT, T, [idsEpi; idsSept], zeros(size(idsEpi,1)+size(idsSept,1),1), 1e-8, 3000);
-tmDistEndo = solveTrajectDist(GT, -T, idsEndo, zeros(size(idsEndo)), 1e-8, 3000);
+%tmDistEpi = solveTrajectDist(GT, T, [idsEpi; idsSept], zeros(size(idsEpi,1)+size(idsSept,1),1), 1e-8, 5000);
+%tmDistEndo = solveTrajectDist(GT, -T, idsEndo, zeros(size(idsEndo)), 1e-8, 5000);
+tmDistEpi = solveTrajectDist(GT, T, [idsEpi; idsSept], zeros(size(idsEpi,1)+size(idsSept,1),1), 1e-6, 5000);
+tmDistEndo = solveTrajectDist(GT, -T, idsEndo, zeros(size(idsEndo)), 1e-6, 5000);
 
 tm_cobi = tmDistEpi./(tmDistEpi+tmDistEndo);
 tm_cobi=min(max(tm_cobi,0),1);

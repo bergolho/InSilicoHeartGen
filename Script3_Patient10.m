@@ -22,7 +22,7 @@ meshformat='cut'  ; %type of mesh  UKBB--> inputs obtained from the UKBB image d
                    %                closed  --> biventricular  with closed valves (EM simulations) 
 
 mesh_resolution_fine=2.0;
-mesh_resolution_coarse=2.5;
+mesh_resolution_coarse=4.0;
 mesh_resolution_hexa=0.05;
                                  
 %% get files name
@@ -270,7 +270,8 @@ end
 %       - Write a 'fibrosis_mask' with the same number of points from the
 %       original mesh;
 %   3) Write the 'fibrosis_mask' to a CSV for the Personalisation code
-name_fibrosis_origin='Patient_10_coarse_fibrosis.vtu';
+%name_fibrosis_origin='Patient_10_coarse_fibrosis.vtu';
+name_fibrosis_origin='Patient_10_refined_fibrosis.vtu';
 surf_fibrosis=vtkRead(fullfile(origpath,name_fibrosis_origin));
 [np_fibrosis, dummy] = size(surf_fibrosis.points);
 [np_mesh, dummy] = size(MeshCoarse.points);

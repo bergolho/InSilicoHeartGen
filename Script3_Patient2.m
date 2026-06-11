@@ -21,14 +21,16 @@ meshformat='cut'  ; %type of mesh  UKBB--> inputs obtained from the UKBB image d
                    %                open --> biventricular  with open valves
                    %                closed  --> biventricular  with closed valves (EM simulations) 
 
-mesh_resolution_fine=1.5;
-mesh_resolution_coarse=2.0;
-mesh_resolution_hexa=0.04;
+mesh_resolution_fine=4.0;
+mesh_resolution_coarse=5.0;
+mesh_resolution_hexa=0.05;
                                  
 %% get files name
 cd(origpath)
-name_origin='Patient_2.ply'; %name of the original surface
-name_final='Patient_2';%name of the final mesh and folder
+%name_origin='Patient_2_coarse_surface_mesh.ply'; %name of the original surface
+%name_final='Patient_2_coarse_surface_mesh'; %name of the final mesh and folder
+name_origin='Patient_2_refine_surface_mesh.ply'; %name of the original surface
+name_final='Patient_2_refine_surface_mesh'; %name of the final mesh and folder
 if ~exist(resultspath,'dir')
   mkdir(resultspath);       
 end
@@ -172,7 +174,7 @@ for index=1
         epiendoRV=[70 0 30]; % percentage of endo/ mid/ epi (RV septal wall as epi)
         requiresInterpolation=1; %0--> no need interpolation for a large number of points
                                  %1--> interpolation requiered 
-        Field_generator_UKBB_function24(Fiber_info,meshformat,pericardium_level, epiendo, epiendoRV,requiresInterpolation,[]);
+        Field_generator_UKBB_function24(Fiber_info,meshformat,pericardium_level, epiendo, epiendoRV,requiresInterpolation,['pac2']);
 
         cd(case_folder)
 
@@ -180,7 +182,7 @@ for index=1
         %this files and formats are created for specific solvers. Creation
         %for a particular solver will required extra formating
 
-        Data4EM=load(fullfile(case_folder, 'ensi_Fine_', 'Case_Fine.mat')) ; %choose between the mesh files  (coarse for EM or fine for EP)
+        Data4EM=load(fullfile(case_folder, strcat('ensi_Fine_','pac2'), 'Case_Fine.mat')) ; %choose between the mesh files  (coarse for EM or fine for EP)
 
         nameEMFolder=['EM_Control_',name_final];
 
@@ -199,7 +201,7 @@ for index=1
 
         %% Hexa Files generation
 %         %read field data
-        casepath=fullfile(resultspath,name_final,'ensi');
+        casepath=fullfile(resultspath,name_final,'ensipac2');
         monodir=fullfile(resultspath,name_final,'MonoAlg3D');
 
         cd(casepath)
@@ -234,8 +236,9 @@ for index=1
              sigma=[0.000310, 0.000155, 0.000205];          %sigma_l   %sigma_t  %sigma_n
 
        else
-           prompt = "input conductance value   ([long, trans, normal]) ";
-           sigma = input(prompt);
+           sigma=[0.000310, 0.000155, 0.000205];          %sigma_l   %sigma_t  %sigma_n
+           %prompt = "input conductance value   ([long, trans, normal]) ";
+           %sigma = input(prompt);
        end
 
        %creation of .ini case
@@ -259,3 +262,26 @@ for index=1
        cd(resultspath)
 end
 
+% Fibrosis handling
+%   1) Extract the fibrosis VTU from the original mesh;
+%       - Currently we are doing this step manually with the Threashold
+%       filter on Paraview
+%       - Load the fibrosis with the 'vtkRead' function   
+%   2) Check the closest point to the mesh and each point on the fibrosis mesh
+%       - The search is done efficiently with the 'dsearchn' function
+%       - Write a 'fibrosis_mask' with the same number of points from the
+%       original mesh;
+%   3) Write the 'fibrosis_mask' to a CSV for the Personalisation code
+name_fibrosis_origin='Patient_2_coarse_fibrosis.vtu';
+surf_fibrosis=vtkRead(fullfile(origpath,name_fibrosis_origin));
+[np_fibrosis, dummy] = size(surf_fibrosis.points);
+[np_mesh, dummy] = size(MeshCoarse.points);
+mesh_fibrosis_mask = zeros(np_mesh(1),1);
+for i=1:np_fibrosis
+    k = dsearchn(MeshCoarse.points,surf_fibrosis.points(i,1:3));
+    mesh_fibrosis_mask(k) = 1;
+end
+directoryResults = pwd;
+%fibrosis_filename = strcat(directoryResults,'\Patient_2_coarse_surface_mesh\ensipac2\CSVFiles\pac2_coarse_fibrosis_mask.csv');
+fibrosis_filename = strcat(directoryResults,'\Patient_2_refine_surface_mesh\ensipac2\CSVFiles\pac2_coarse_fibrosis_mask.csv');
+writematrix(mesh_fibrosis_mask,fibrosis_filename);

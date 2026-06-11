@@ -37,8 +37,8 @@ save_ensi_field_hex('Fields_Hex','Apex_2_base_projection',a2b);
 save_ensi_field_hex('Fields_Hex','Rv_2_lv_projection',r2l);
 save_ensi_field_hex('Fields_Hex','Anterior_2_posterior_projection',a2p);
 save_ensi_field_hex('Fields_Hex','FiberL',F);
-save_ensi_field_hex('Fields_Hex','FiberS',F_S);
 save_ensi_field_hex('Fields_Hex','FiberN',F_N);
+save_ensi_field_hex('Fields_Hex','FiberS',F_S);
 save_ensi_field_hex('Fields_Hex','Material',Material);
 save_ensi_field_hex('Fields_Hex','Aha',aha);
 save_ensi_field_hex('Fields_Hex','Repolarisation_gradients',Ik_s);
@@ -60,8 +60,8 @@ fields_cell{12}={'Apex_2_base_projection','Apex_2_base_projection',1}; %name of 
 fields_cell{13}={'Rv_2_lv_projection','Rv_2_lv_projection',1}; %name of file, name for variable in ensigth, dimension
 fields_cell{14}={'Anterior_2_posterior_projection','Anterior_2_posterior_projection',1}; %name of file, name for variable in ensigth, dimension
 fields_cell{15}={'FiberL','FiberL',3}; %name of file, name for variable in ensigth, dimension
-fields_cell{16}={'FiberS','FiberS',3}; %name of file, name for variable in ensigth, dimension
-fields_cell{17}={'FiberN','FiberN',3}; %name of file, name for variable in ensigth, dimension
+fields_cell{16}={'FiberN','FiberN',3}; %name of file, name for variable in ensigth, dimension
+fields_cell{17}={'FiberS','FiberS',3}; %name of file, name for variable in ensigth, dimension
 fields_cell{18}={'Material','Material',1}; %name of file, name for variable in ensigth, dimension
 fields_cell{19}={'Aha','Aha',1}; %name of file, name for variable in ensigth, dimension
 fields_cell{20}={'Repolarisation_gradients','Repolarisation_gradients',size(Ik_s,2),size(Ik_s,1)}; %name of file, name for variable in ensigth, dimension

@@ -14,11 +14,7 @@
 %     You should have received a copy of the GNU General Public License
 %     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function save_ensi_UKBB(v,f,Ventricle,d3,Tphi3,Tphi_cobi,Epiendo,Epiendo3,a2b_uvc,a2b_cobi,r,lvrv_cobi,r2l_geo,a2b,r2l,a2p,F,F_S,F_N,apex_2_base,aha,Material)
-
-% Fast endo
-FastEndo=ones(size(Ventricle));
-FastEndo(Ventricle==1 | Ventricle==-2)=0; %Fast endo is 0. Normal tissue:1
+function save_ensi_with_fibrosis_UKBB(v,f,Ventricle,d3,Tphi3,Tphi_cobi,Epiendo,Epiendo3,a2b_uvc,a2b_cobi,r,lvrv_cobi,r2l_geo,a2b,r2l,a2p,F,F_S,F_N,apex_2_base,aha,Material,fibrosis)
 
 %function that saves the required fields in ensi format
 
@@ -28,7 +24,6 @@ save_ensi_geo('Fields',v,f);
 
 %create fields
 save_ensi_field('Fields','Ventricle',Ventricle);
-save_ensi_field('Fields','FastEndo',FastEndo);
 save_ensi_field('Fields','Transmurality',d3);
 save_ensi_field('Fields','TransmuralityRV',Tphi3);
 save_ensi_field('Fields','Transmurality_cobi',Tphi_cobi);
@@ -47,6 +42,7 @@ save_ensi_field('Fields','FiberS',F_S);
 save_ensi_field('Fields','FiberN',F_N);
 save_ensi_field('Fields','Repolarisation_gradients',apex_2_base);
 save_ensi_field('Fields','Aha',aha);
+save_ensi_field('Fields','Fibrosis',fibrosis);
 save_ensi_field_tet('Fields','Material',Material);
 
 
@@ -70,8 +66,9 @@ fields_cell{16}={'FiberS','FiberS',size(F_S,2),size(F_S,1)}; %name of file, name
 fields_cell{17}={'FiberN','FiberN',size(F_N,2),size(F_N,1)}; %name of file, name for variable in ensigth, dimension
 fields_cell{18}={'Repolarisation_gradients','Repolarisation_gradients',size(apex_2_base,2),size(apex_2_base,1)}; %name of file, name for variable in ensigth, dimension
 fields_cell{19}={'Aha','Aha',size(aha,2),size(aha,1)}; %name of file, name for variable in ensigth, dimension
-fields_cell{20}={'Material','Material',size(Material,2),size(Material,1)}; %name of file, name for variable in ensigth, dimension
-fields_cell{21}={'FastEndo','FastEndo',size(FastEndo,2),size(FastEndo,1)}; %name of variable in matlab, name for variable in ensigth, dimension
+fields_cell{20}={'Fibrosis','Fibrosis',size(fibrosis,2),size(fibrosis,1)}; %name of file, name for variable in ensigth, dimension
+fields_cell{21}={'Material','Material',size(Material,2),size(Material,1)}; %name of file, name for variable in ensigth, dimension
+
 
 
 save_ensi_case('Fields',fields_cell,length(v),length(f));

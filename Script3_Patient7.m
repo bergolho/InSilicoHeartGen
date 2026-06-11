@@ -21,14 +21,15 @@ meshformat='cut'  ; %type of mesh  UKBB--> inputs obtained from the UKBB image d
                    %                open --> biventricular  with open valves
                    %                closed  --> biventricular  with closed valves (EM simulations) 
 
-mesh_resolution_fine=1.75;
-mesh_resolution_coarse=2.0;
-mesh_resolution_hexa=0.04;
+mesh_resolution_fine=4.0;
+mesh_resolution_coarse=5.0;
+mesh_resolution_hexa=0.05;
                                  
 %% get files name
 cd(origpath)
-name_origin='Patient_7_coarse_surface_mesh.ply'; %name of the original surface
-name_final='Patient_7_coarse_surface_mesh';%name of the final mesh and folder
+name_origin='Patient_7_refine_surface_mesh.ply'; %name of the original surface
+name_final='Patient_7_refine_surface_mesh';      %name of the final mesh and folder
+fibrosis_filename='C:\Users\arant\Documents\MEGA\Postdoc\CNPq\Conhecimento_Brasil_2024\Programas\InSilicoHeartGen-main\inputs\Patient_7_refined_fibrosis.vtu'
 if ~exist(resultspath,'dir')
   mkdir(resultspath);       
 end
@@ -172,8 +173,8 @@ for index=1
         epiendoRV=[70 0 30]; % percentage of endo/ mid/ epi (RV septal wall as epi)
         requiresInterpolation=1; %0--> no need interpolation for a large number of points
                                  %1--> interpolation requiered 
-        %Field_generator_UKBB_function24(Fiber_info,meshformat,pericardium_level, epiendo, epiendoRV,requiresInterpolation,[]);
-        Field_generator_UKBB_function24(Fiber_info,meshformat,pericardium_level, epiendo, epiendoRV,requiresInterpolation,);
+        %Field_generator_UKBB_function24(Fiber_info,meshformat,pericardium_level, epiendo, epiendoRV,requiresInterpolation,['pac7']);
+        Field_generator_with_fibrosis_UKBB_function24(Fiber_info,meshformat,pericardium_level, epiendo, epiendoRV,requiresInterpolation,['pac7'],fibrosis_filename);
 
         cd(case_folder)
 
@@ -181,7 +182,7 @@ for index=1
         %this files and formats are created for specific solvers. Creation
         %for a particular solver will required extra formating
 
-        Data4EM=load(fullfile(case_folder, 'ensi_Fine_', 'Case_Fine.mat')) ; %choose between the mesh files  (coarse for EM or fine for EP)
+        Data4EM=load(fullfile(case_folder, strcat('ensi_Fine_','pac7'), 'Case_Fine.mat')) ; %choose between the mesh files  (coarse for EM or fine for EP)
 
         nameEMFolder=['EM_Control_',name_final];
 
@@ -200,7 +201,7 @@ for index=1
 
         %% Hexa Files generation
 %         %read field data
-        casepath=fullfile(resultspath,name_final,'ensi');
+        casepath=fullfile(resultspath,name_final,'ensipac7');
         monodir=fullfile(resultspath,name_final,'MonoAlg3D');
 
         cd(casepath)
@@ -270,16 +271,16 @@ end
 %       - Write a 'fibrosis_mask' with the same number of points from the
 %       original mesh;
 %   3) Write the 'fibrosis_mask' to a CSV for the Personalisation code
-%name_fibrosis_origin='Patient_7_coarse_fibrosis.vtu';
-%surf_fibrosis=vtkRead(fullfile(origpath,name_fibrosis_origin));
-%[np_fibrosis, dummy] = size(surf_fibrosis.points);
-%[np_mesh, dummy] = size(MeshCoarse.points);
-%mesh_fibrosis_mask = zeros(np_mesh(1),1);
-%for i=1:np_fibrosis
-%    k = dsearchn(MeshCoarse.points,surf_fibrosis.points(i,1:3));
-%    mesh_fibrosis_mask(k) = 1;
-%end
-%directoryResults = pwd;
-%fibrosis_filename = strcat(directoryResults,'\Patient_7\ensi\CSVFiles\Patient_7_fibrosis_mask.csv');
-%writematrix(mesh_fibrosis_mask,fibrosis_filename);
+name_fibrosis_origin='Patient_7_refined_fibrosis.vtu';
+surf_fibrosis=vtkRead(fullfile(origpath,name_fibrosis_origin));
+[np_fibrosis, dummy] = size(surf_fibrosis.points);
+[np_mesh, dummy] = size(MeshCoarse.points);
+mesh_fibrosis_mask = zeros(np_mesh(1),1);
+for i=1:np_fibrosis
+    k = dsearchn(MeshCoarse.points,surf_fibrosis.points(i,1:3));
+    mesh_fibrosis_mask(k) = 1;
+end
+directoryResults = pwd;
+fibrosis_filename = strcat(directoryResults,'\Patient_7_refine_surface_mesh\ensipac7\CSVFiles\pac7_refined_fibrosis_mask.csv');
+writematrix(mesh_fibrosis_mask,fibrosis_filename);
 
