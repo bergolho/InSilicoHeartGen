@@ -33,16 +33,16 @@ function CSVFilesgeneration_f_UKBB(name,matfilename)
     writematrix(F_N,strcat(name,'_nodefield_normal.csv'));
     
     %cobi coordinates
-    writematrix(a2b_cobi,strcat(name,'_nodefield_cobiveco_ab.csv'));
-    writematrix(a2b_cobi,strcat(name,'_nodefield_cobiveco_ab_cut.csv'));
-    writematrix(lvrv_cobi,strcat(name,'_nodefield_cobiveco_tv.csv'));
-    writematrix(Tphi3,strcat(name,'_nodefield_cobiveco_tm.csv'));
-    writematrix(r,strcat(name,'_nodefield_cobiveco_rt.csv'));
+    writematrix(a2b_cobi,strcat(name,'_nodefield_ab.csv'));
+    writematrix(a2b_cobi,strcat(name,'_nodefield_ab_cut.csv'));
+    writematrix(lvrv_cobi,strcat(name,'_nodefield_tv.csv'));
+    writematrix(Tphi3,strcat(name,'_nodefield_tm.csv'));
+    writematrix(r,strcat(name,'_nodefield_rt.csv'));
     writematrix([a2b_cobi,r,tm_cobi,lvrv_cobi],strcat(name,'_cobiveco.csv'));
     
     %gradients
-    writematrix(a2p,strcat(name,'_nodefield_cobiveco_aprt.csv'));
-    writematrix(r2l_geo,strcat(name,'_nodefield_cobiveco_rvlv.csv'));
+    writematrix(a2p,strcat(name,'_nodefield_aprt.csv'));
+    writematrix(r2l_geo,strcat(name,'_nodefield_rvlv.csv'));
     writematrix(r2l,strcat(name,'_nodefield_cobiveco-rvlv-projection.csv'));
 
     %materials tetra
@@ -57,8 +57,8 @@ function CSVFilesgeneration_f_UKBB(name,matfilename)
         RV_ind=intersect(find(and(lvrv_cobi==1,Ventricle==1)),unique(face));
         LV_ind=intersect(find(and(lvrv_cobi==0,Ventricle==-2)),unique(face));
     
-    writematrix(RV_ind,strcat(name,'_boundarynodefield_rvnodes.csv'));
-    writematrix(LV_ind,strcat(name,'_boundarynodefield_lvnodes.csv'));
+    writematrix(RV_ind,strcat(name,'_boundarynodefield_rvendo.csv'));
+    writematrix(LV_ind,strcat(name,'_boundarynodefield_lvendo.csv'));
 
     %write cobiveco originals
     % writematrix(a2b_projected,strcat(name,'_nodefield_cobiveco-ab-original.csv'));
